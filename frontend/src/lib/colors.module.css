@@ -1,0 +1,28 @@
+.badge {
+  display: inline-block;
+  width: 2em;
+  height: 2em;
+  line-height: 2em;
+  text-align: center;
+  border-radius: 3rem;
+}
+
+.black {
+  background-color: black;
+  color: #fff;
+}
+
+.red {
+  background-color: red;
+  color: #fff;
+}
+
+.orange {
+  background-color: orange;
+  color: #fff;
+}
+
+.green {
+  background-color: green;
+  color: #fff;
+}
