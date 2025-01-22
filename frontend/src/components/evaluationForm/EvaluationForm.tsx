@@ -1,5 +1,6 @@
 import { Slider, Typography } from "@mui/material";
-import React, { useContext } from "react";
+import { Mark } from "@mui/material/Slider/useSlider.types";
+import React, { useContext, useEffect, useState } from "react";
 import { Evaluation } from "../../../../api";
 import { evaluateBadgeColor } from "../../lib/evaluateColor";
 import { EvaluationFormContext, TEvaluationContext } from "./EvaluationContext";
@@ -9,6 +10,23 @@ export const EvaluationForm: React.FC = () => {
   const { state, setState, setTask, note, link, onSave } = useContext(
     EvaluationFormContext,
   ) as TEvaluationContext;
+
+  const [suggestedVote, setSuggestedVote] = useState(0);
+
+  // Voto suggerito, riportato sullo slider
+  const sliderMarks: Mark[] = [
+    { value: suggestedVote, label: `Voto suggerito: ${suggestedVote}` },
+  ];
+
+  useEffect(() => {
+    // Calcola il voto suggerito
+    /**
+     * TODO: Task 2 - frontend
+     * Qui devi implementare l'invocazione dell'api /api/calculate per ottenere il voto suggerito
+     * Poi togli lo stub di codice qui sotto
+     */
+    setSuggestedVote(9);
+  }, [state.task_svolti_correttamente]);
 
   return (
     <form
@@ -71,7 +89,7 @@ export const EvaluationForm: React.FC = () => {
       </div>
       <h2>
         Valutazione complessiva:{" "}
-        <span className={evaluateBadgeColor(state.valutazione).join(" ")}>
+        <span className={evaluateBadgeColor(state.valutazione)}>
           {state.valutazione}
         </span>
       </h2>
@@ -82,13 +100,19 @@ export const EvaluationForm: React.FC = () => {
         marks={true}
         valueLabelDisplay="auto"
         value={state.valutazione}
-        onChange={(e) =>
+        marks={sliderMarks}
+        onChange={(e) => {
           setState((state) => ({
             ...state,
             valutazione: Number(e.target.value),
-          }))
-        }
+          }));
+        }}
       />
+      <div className={styles.note}>
+        La valutazione può essere modificata a piacere dal docente, il voto
+        calcalato sulla base dei task svolti è solo un suggerimento
+      </div>
+
       <h2>Note del docente</h2>
       <div className={styles.fullWidth}>
         <textarea

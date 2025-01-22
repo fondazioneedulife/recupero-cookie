@@ -1,7 +1,9 @@
+import { TaskEvaluations } from "./types/evaluations";
+
 /**
  * Values associated to each task, when correctly completed
  */
-export const task_evaluations = {
+export const task_evaluations: TaskEvaluations = {
   fork_commit_pr: 1,
   task_1_frontend: 2,
   task_1_backend: 2,

@@ -19,3 +19,12 @@
     flex-grow: 2;
   }
 }
+
+.note {
+  color: #999;
+  font-size: 0.9em;
+  padding: 10px;
+  background-color: #efefef;
+  border: 1px solid #999;
+  border-radius: 4px;
+}

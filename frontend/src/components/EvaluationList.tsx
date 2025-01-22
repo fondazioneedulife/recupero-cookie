@@ -15,7 +15,7 @@ import { EvaluationsContext } from "./EvaluationsContext";
 
 export const EvaluationList: React.FC = () => {
   const navigate = useNavigate();
-  const { evaluations } = useContext(EvaluationsContext);
+  const { evaluations, average } = useContext(EvaluationsContext);
 
   const taskSvolti = (evaluation: Evaluation) => {
     const total = Object.keys(evaluation.task_svolti_correttamente).length;
@@ -23,27 +23,6 @@ export const EvaluationList: React.FC = () => {
       evaluation.task_svolti_correttamente,
     ).filter((task) => task).length;
     return `${completed}/${total}`;
-  };
-
-  const mediaTaskSvolti = (evaluations: Evaluation[]) => {
-    const total = evaluations.length;
-    const completed = evaluations
-      .map(
-        (evaluation) =>
-          Object.values(evaluation.task_svolti_correttamente).filter(
-            (task) => task,
-          ).length,
-      )
-      .reduce((acc, completed) => acc + completed, 0);
-    return `${Math.round((completed / total) * 10) / 10}`;
-  };
-
-  const mediaValutazioni = (evaluations: Evaluation[]) => {
-    const total = evaluations.length;
-    const completed = evaluations
-      .map((evaluation) => evaluation.valutazione)
-      .reduce((acc, valutazione) => acc + valutazione, 0);
-    return `${Math.round((completed / total) * 10) / 10}`;
   };
 
   return (
@@ -72,11 +51,7 @@ export const EvaluationList: React.FC = () => {
               <TableCell>{evaluation.nome}</TableCell>
               <TableCell>{taskSvolti(evaluation)}</TableCell>
               <TableCell>
-                <div
-                  className={evaluateBadgeColor(evaluation.valutazione).join(
-                    " ",
-                  )}
-                >
+                <div className={evaluateBadgeColor(evaluation.valutazione)}>
                   {evaluation.valutazione}
                 </div>
               </TableCell>
@@ -95,12 +70,8 @@ export const EvaluationList: React.FC = () => {
           ))}
           <TableRow>
             <TableCell sx={{ fontWeight: "bold" }}>Media</TableCell>
-            <TableCell sx={{ fontWeight: "bold" }}>
-              {mediaTaskSvolti(evaluations)}
-            </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }}>
-              {mediaValutazioni(evaluations)}
-            </TableCell>
+            <TableCell sx={{ fontWeight: "bold" }}>{average.tasks}</TableCell>
+            <TableCell sx={{ fontWeight: "bold" }}>{average.rating}</TableCell>
             <TableCell></TableCell>
             <TableCell></TableCell>
             <TableCell></TableCell>
