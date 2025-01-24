@@ -48,13 +48,20 @@ Quando hai terminato, segui le istruzioni per la consegna (vedi sotto).
 
 - Installa l'applicazione e verifica che parta correttamente
 - **Task 1**:
-  - frontend: nel file [frontend\src\components\EvaluationsContext.tsx](frontend\src\components\EvaluationsContext.tsx) invoca l'api `/api/average-evaluation` dove indicato
-  - backend: nel file [backend\routes\api.ts](backend\routes\api.ts), implementa l'api `/api/average-evaluation` dove indicato
+  - frontend: nel file [frontend/src/components/EvaluationsContext.tsx](./frontend/src/components/EvaluationsContext.tsx) invoca l'api `/api/average-evaluation` dove indicato
+  - backend: nel file [backend/routes/api.ts](./backend/routes/api.ts), dove indicato, implementa l'api `/api/average-evaluation` per ottenere la media delle valutazioni:
+    - ottieni tutte le valutazioni con services/evaluation.getEvaluations
+    - calcola la media delle valutazioni con lib/averages.averageRating
+    - calcola la media dei task svolti con lib/averages.averageTasks
+    - ritorna un oggetto di tipo Average con le due medie (il tipo Average lo trovi in api/evaluation.ts)
 - **Task 2**:
-  - frontend: nel file [frontend\src\components\evaluationForm\EvaluationForm.tsx](frontend\src\components\evaluationForm\EvaluationForm.tsx) implementa la chiamata all'api `/api/calculate` e agiorna lo stato del componente
-  - backend: nel file [backend\routes\api.ts](backend\routes\api.ts), implementa l'api `/api/calculate` dove indicato
+  - frontend: nel file [frontend/src/components/evaluationForm/EvaluationForm.tsx](./frontend/src/components/evaluationForm/EvaluationForm.tsx) implementa la chiamata all'api `/api/calculate` e agiorna lo stato del componente
+  - backend: nel file [backend/routes/api.ts](./backend/routes/api.ts), dove indicato, implementa l'api `/api/calculate` per calcolare la valutazione di un compito:
+    - recupera i task svolti dal body della richiesta
+    - calcola la valutazione con lib/evaluation.calculate
+    - ritorna la valutazione (un numero intero)
 - **Task 3**:
-  - backend: nel file [backend\lib\averages.ts](backend\lib\averages.ts), dove indicato, completa la funzione `averageRating` in modo che calcoli la media delle valutazioni
+  - backend: nel file [backend/lib/averages.ts](./backend/lib/averages.ts), dove indicato, completa la funzione `averageRating` in modo che calcoli la media delle valutazioni
 
 ### Istruzioni per la consegna
 
