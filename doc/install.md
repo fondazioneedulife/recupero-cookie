@@ -18,7 +18,7 @@ L'installazione di tutte le dipendenze si effettua lanciando il comando: `npm in
 
 Il database su cui è sviluppata l'applicazione è **MongoDB**, a cui ci si connette tramite la libreria _mongoose_. Per avviare il database, **puoi utilizzare il tuo database locale**, oppure **avviarlo con docker**, digitando il comando `docker compose up -d` dalla directory di questo progetto.
 
-La connessione è impostata sui parametri di default `mongodb://localhost:27017/secretsanta`.
+La connessione è impostata sui parametri di default `mongodb://localhost:27017/exam-evaluation`.
 
 # Run
 
