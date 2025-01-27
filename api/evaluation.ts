@@ -1,6 +1,4 @@
-/**
- * Task svolti correttamente
- */
+
 export type Tasks = {
   fork_commit_pr: boolean;
   task_1_frontend: boolean;
@@ -11,24 +9,14 @@ export type Tasks = {
 
 export type Evaluation = {
   _id?: string;
-  /**
-   * Nome dello studente
-   */
+
   nome: string;
-  /**
-   * Task svolti correttamente
-   */
+
   task_svolti_correttamente: Tasks;
-  /**
-   * Valutazione complessiva
-   */
+
   valutazione: number;
-  /**
-   * Note del docente
-   */
+
   note: string;
-  /**
-   * Link alla PR o, se assente, al repository dello studente o altro file pervenuto
-   */
+
   link: string;
 };

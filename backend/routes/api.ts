@@ -7,6 +7,8 @@ import {
   getEvaluations,
   updateEvaluation,
 } from "../services/evaluation";
+import { averageRating, averageTasks } from "../lib/averages";
+
 
 const router = new Router({
   prefix: "/api",
@@ -42,6 +44,25 @@ router.delete("/evaluation/:id", async (ctx) => {
 /**
  * TODO: Task 1 - backend
  */
+
+router.get("/average-evaluation", async (ctx) => {
+  try {
+    const evaluations = await getEvaluations();
+
+    const average = {
+      rating: averageRating(evaluations),
+      tasks: averageTasks(evaluations),
+    };
+
+    ctx.body = average;
+  } catch (error) {
+    console.error("Errore di calcolo media:", error);
+    ctx.status = 500;
+    ctx.body = { message: "Errore di calcolo media" };
+  }
+});
+
+
 
 /**
  * TODO: Task 2 - backend

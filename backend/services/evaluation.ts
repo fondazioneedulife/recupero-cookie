@@ -25,7 +25,7 @@ const schema = new DB.Schema<Evaluation>(
 
 const EvaluationModel = DB.model("evaluation", schema);
 
-export const getEvaluations = async () => {
+export const getEvaluations = async (id: string) => {
   return EvaluationModel.find();
 };
 
