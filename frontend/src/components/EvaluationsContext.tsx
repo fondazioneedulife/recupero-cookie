@@ -7,7 +7,7 @@ import {
 } from "react";
 import { Average, Evaluation } from "../../../api";
 import { config } from "../config";
-
+ 
 type TEvaluationContext = {
   reload: () => void;
   evaluations: Evaluation[];
