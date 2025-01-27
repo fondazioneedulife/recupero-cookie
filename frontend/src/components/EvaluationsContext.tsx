@@ -15,7 +15,7 @@ type TEvaluationContext = {
 };
 
 export const EvaluationsContext = createContext<TEvaluationContext>({
-  reload: () => {},
+  reload: () => { },
   evaluations: [],
   average: { tasks: "0", rating: "0" },
 });
@@ -29,10 +29,11 @@ const getAverage = () => {
    * Qui devi implementare l'invocazione dell'api /api/average-evaluation per ottenere la media
    * Poi togli lo stub di codice qui sotto
    */
-  return Promise.resolve({
-    tasks: "Attenzione, qui manca il dato!",
-    rating: "Attenzione, qui manca il dato!",
-  } as Average);
+
+  return fetch(`${config.API_BASEPATH}/api/average-evaluation`)
+    .then((res) => res.json())
+    .then((data) => data as Average);
+
 };
 
 export const EvaluationsProvider: React.FC<PropsWithChildren> = ({

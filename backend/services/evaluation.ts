@@ -44,3 +44,5 @@ export const updateEvaluation = async (id: string, evaluation: Evaluation) => {
 export const deleteEvaluation = async (id: string) => {
   return EvaluationModel.findByIdAndDelete(id);
 };
+
+

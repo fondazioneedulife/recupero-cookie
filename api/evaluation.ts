@@ -32,3 +32,10 @@ export type Evaluation = {
    */
   link: string;
 };
+
+
+export type Average = {
+  // definisci le proprietà del tipo Average
+  tasks: string;
+  rating: string;
+};
