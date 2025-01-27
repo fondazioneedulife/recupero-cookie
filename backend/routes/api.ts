@@ -7,6 +7,7 @@ import {
   getEvaluations,
   updateEvaluation,
 } from "../services/evaluation";
+import { averageRating, averageTasks } from "../lib/averages";
 
 const router = new Router({
   prefix: "/api",
@@ -39,9 +40,14 @@ router.delete("/evaluation/:id", async (ctx) => {
   ctx.body = { message: "Evaluation deleted" };
 });
 
-/**
- * TODO: Task 1 - backend
- */
+router.get("/average-evaluation", async (ctx) => {
+  const evaluations = await getEvaluations();
+  const average = {
+    rating: averageRating(evaluations),
+    tasks: averageTasks(evaluations),
+  };
+  ctx.body = average;
+});
 
 /**
  * TODO: Task 2 - backend
