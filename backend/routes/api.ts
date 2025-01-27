@@ -7,6 +7,7 @@ import {
   getEvaluations,
   updateEvaluation,
 } from "../services/evaluation";
+import { averageRating, averageTasks } from '../lib/averages'; // Importa le funzioni per calcolare le medie
 
 const router = new Router({
   prefix: "/api",
@@ -40,11 +41,21 @@ router.delete("/evaluation/:id", async (ctx) => {
 });
 
 /**
- * TODO: Task 1 - backend
+ * Task 1 - Implementazione dell'API /api/average-evaluation
  */
-
-/**
- * TODO: Task 2 - backend
- */
+router.get("/average-evaluation", async (ctx) => {
+  try {
+    const evaluations = await getEvaluations();
+    const avgRating = averageRating(evaluations);
+    const avgTasks = averageTasks(evaluations);
+    ctx.body = {
+      averageRating: avgRating,
+      averageTasks: avgTasks,
+    };
+  } catch (error) {
+    ctx.status = 500;
+    ctx.body = 'Errore nel calcolare la media delle valutazioni';
+  }
+});
 
 export default router;
