@@ -20,3 +20,8 @@ export type Evaluation = {
 
   link: string;
 };
+
+export type Average = {
+  tasks: string;
+  rating: string;
+};
