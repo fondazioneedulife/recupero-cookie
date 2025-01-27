@@ -22,9 +22,10 @@ export const averageTasks = (evaluations: Evaluation[]) => {
  * Calcola il voto medio
  * Ritorna una stringa numerica con un solo decimale
  */
+
 export const averageRating = (evaluations: Evaluation[]) => {
   const total = evaluations.length;
-  const sum = 100; // TODO: Task 3 - backend - Somma i voti di tutte le valutazioni
+  const sum = evaluations.reduce((sum, evaluation) => sum + evaluation.valutazione, 0); // TODO: Task 3 - backend - Somma i voti di tutte le valutazioni
   const average = sum / total;
   return `${Math.round(average * 10) / 10}`;
 };
