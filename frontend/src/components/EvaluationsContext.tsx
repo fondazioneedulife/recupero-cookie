@@ -23,16 +23,15 @@ export const EvaluationsContext = createContext<TEvaluationContext>({
 const loadEvaluations = () =>
   fetch(`${config.API_BASEPATH}/api/evaluations`).then((res) => res.json());
 
-const getAverage = () => {
-  /**
-   * TODO: Task 1 - frontend
-   * Qui devi implementare l'invocazione dell'api /api/average-evaluation per ottenere la media
-   * Poi togli lo stub di codice qui sotto
-   */
-  return Promise.resolve({
-    tasks: "Attenzione, qui manca il dato!",
-    rating: "Attenzione, qui manca il dato!",
-  } as Average);
+const getAverage = async (): Promise<Average> => {
+  try {
+    const res = await fetch(`${config.API_BASEPATH}/api/average-evaluation`);
+    if (!res.ok) throw new Error("Errore nel caricamento della media");
+    return await res.json();
+  } catch (error) {
+    console.error("Errore durante il caricamento della media:", error);
+    return { tasks: "0", rating: "0" };
+  }
 };
 
 export const EvaluationsProvider: React.FC<PropsWithChildren> = ({

@@ -25,6 +25,7 @@ const schema = new DB.Schema<Evaluation>(
 
 const EvaluationModel = DB.model("evaluation", schema);
 
+/* ottieni tutte le valutazioni con services/evaluation.getEvaluations */
 export const getEvaluations = async () => {
   return EvaluationModel.find();
 };

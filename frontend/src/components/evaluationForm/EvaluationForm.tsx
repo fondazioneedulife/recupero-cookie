@@ -5,27 +5,41 @@ import { Evaluation } from "../../../../api";
 import { evaluateBadgeColor } from "../../lib/evaluateColor";
 import { EvaluationFormContext, TEvaluationContext } from "./EvaluationContext";
 import styles from "./EvaluationForm.module.css";
+import { config } from "../../config"; 
 
 export const EvaluationForm: React.FC = () => {
   const { state, setState, setTask, note, link, onSave } = useContext(
-    EvaluationFormContext,
+    EvaluationFormContext
   ) as TEvaluationContext;
 
   const [suggestedVote, setSuggestedVote] = useState(0);
 
-  // Voto suggerito, riportato sullo slider
   const sliderMarks: Mark[] = [
     { value: suggestedVote, label: `Voto suggerito: ${suggestedVote}` },
   ];
 
   useEffect(() => {
-    // Calcola il voto suggerito
-    /**
-     * TODO: Task 2 - frontend
-     * Qui devi implementare l'invocazione dell'api /api/calculate per ottenere il voto suggerito
-     * Poi togli lo stub di codice qui sotto
-     */
-    setSuggestedVote(9);
+    const calculateVote = async () => {
+      try {
+        const response = await fetch(`${config.API_BASEPATH}/api/calculate`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ tasks: state.task_svolti_correttamente }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Errore durante il calcolo del voto suggerito");
+        }
+
+        const { suggestedVote } = await response.json();
+        setSuggestedVote(suggestedVote);
+      } catch (error) {
+        console.error("Errore durante il calcolo del voto suggerito:", error);
+        setSuggestedVote(0);
+      }
+    };
+
+    calculateVote();
   }, [state.task_svolti_correttamente]);
 
   return (
@@ -102,15 +116,17 @@ export const EvaluationForm: React.FC = () => {
         value={state.valutazione}
         marks={sliderMarks}
         onChange={(e) => {
+          const value = Number((e.target as HTMLInputElement).value); 
           setState((state) => ({
             ...state,
-            valutazione: Number(e.target.value),
+            valutazione: value,
           }));
         }}
+        
       />
       <div className={styles.note}>
         La valutazione può essere modificata a piacere dal docente, il voto
-        calcalato sulla base dei task svolti è solo un suggerimento
+        calcolato sulla base dei task svolti è solo un suggerimento.
       </div>
 
       <h2>Note del docente</h2>

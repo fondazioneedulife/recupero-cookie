@@ -1,30 +1,33 @@
 import { Evaluation } from "../../api";
 
-/**
- * Calcola il numero medio di task svolti
- * Ritorna una stringa numerica con un solo decimale
- */
-export const averageTasks = (evaluations: Evaluation[]) => {
-  const total = evaluations.length;
-  const completed = evaluations
-    .map(
-      (evaluation) =>
-        Object.values(evaluation.task_svolti_correttamente).filter(
-          (task) => task,
-        ).length,
-    )
-    .reduce((acc, completed) => acc + completed, 0);
-  const average = completed / total;
-  return `${Math.round(average * 10) / 10}`;
+export const averageRating = (evaluations: Evaluation[]): number => {
+  const totalRating = evaluations.reduce(
+    (acc, curr) => acc + (curr.valutazione || 0),
+    0
+  );
+  return evaluations.length ? totalRating / evaluations.length : 0;
 };
 
-/**
- * Calcola il voto medio
- * Ritorna una stringa numerica con un solo decimale
- */
-export const averageRating = (evaluations: Evaluation[]) => {
-  const total = evaluations.length;
-  const sum = 100; // TODO: Task 3 - backend - Somma i voti di tutte le valutazioni
-  const average = sum / total;
-  return `${Math.round(average * 10) / 10}`;
+export const averageTasks = (evaluations: Evaluation[]): number => {
+  const totalTasks = evaluations.reduce((acc, curr) => {
+    const tasks = curr.task_svolti_correttamente || {};
+    const completedTasks = Object.values(tasks).filter(Boolean).length;
+    return acc + completedTasks;
+  }, 0);
+  return evaluations.length ? totalTasks / evaluations.length : 0;
+};
+
+type Tasks = {
+  fork_commit_pr: boolean;
+  task_1_frontend: boolean;
+  task_1_backend: boolean;
+  task_2_frontend: boolean;
+  task_2_backend: boolean;
+};
+
+export const calculate = (tasks: Tasks): number => {
+  const taskValues = Object.values(tasks);
+  const completedTasks = taskValues.filter((task) => task).length;
+
+  return Math.min(completedTasks * 2, 10); 
 };

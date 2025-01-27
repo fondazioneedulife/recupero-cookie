@@ -7,6 +7,9 @@ import {
   getEvaluations,
   updateEvaluation,
 } from "../services/evaluation";
+import { averageRating, averageTasks } from "../lib/averages";
+import { calculate } from "../lib/evaluation";
+
 
 const router = new Router({
   prefix: "/api",
@@ -40,11 +43,50 @@ router.delete("/evaluation/:id", async (ctx) => {
 });
 
 /**
- * TODO: Task 1 - backend
+ * TODO: Task 1 - backend devo implementare l'api /api/average-evaluation per ottenere la media delle valutazioni
  */
+router.get("/average-evaluation", async (ctx) => {
+  try {
+    const evaluations = await getEvaluations();
 
-/**
- * TODO: Task 2 - backend
- */
+    if (evaluations.length === 0) {
+      ctx.body = { tasks: "0", rating: "0" }; 
+      return;
+    }
+
+    const ratingAverage = averageRating(evaluations);
+    const tasksAverage = averageTasks(evaluations);
+
+    ctx.body = {
+      tasks: tasksAverage.toFixed(2), 
+      rating: ratingAverage.toFixed(2), 
+    };
+  } catch (error) {
+    console.error("Errore durante il calcolo delle medie:", error);
+    ctx.status = 500;
+    ctx.body = { error: "Errore durante il calcolo delle medie" };
+  }
+});
+
+
+router.post("/calculate", async (ctx) => {
+  try {
+    const { tasks } = ctx.request.body;
+
+    if (!tasks) {
+      ctx.status = 400;
+      ctx.body = { error: "I task svolti non sono stati forniti" };
+      return;
+    }
+
+    const suggestedVote = calculate(tasks);
+
+    ctx.body = { suggestedVote };
+  } catch (error) {
+    console.error("Errore durante il calcolo del voto:", error);
+    ctx.status = 500;
+    ctx.body = { error: "Errore durante il calcolo del voto" };
+  }
+});
 
 export default router;
