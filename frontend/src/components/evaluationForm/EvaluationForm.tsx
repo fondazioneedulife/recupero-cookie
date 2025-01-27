@@ -6,26 +6,53 @@ import { evaluateBadgeColor } from "../../lib/evaluateColor";
 import { EvaluationFormContext, TEvaluationContext } from "./EvaluationContext";
 import styles from "./EvaluationForm.module.css";
 
+
+export type TaskEvaluations = Record<keyof Tasks, number>;
+
 export const EvaluationForm: React.FC = () => {
   const { state, setState, setTask, note, link, onSave } = useContext(
     EvaluationFormContext,
   ) as TEvaluationContext;
 
+  // Stato locale per il voto suggerito
   const [suggestedVote, setSuggestedVote] = useState(0);
 
-  // Voto suggerito, riportato sullo slider
+  // In questo esempio, la slider usa il valore dello state globale "valutazione"
+  // Il voto suggerito è solo un riferimento, evidenziato nel label dei mark
   const sliderMarks: Mark[] = [
     { value: suggestedVote, label: `Voto suggerito: ${suggestedVote}` },
   ];
 
   useEffect(() => {
-    // Calcola il voto suggerito
-    /**
-     * TODO: Task 2 - frontend
-     * Qui devi implementare l'invocazione dell'api /api/calculate per ottenere il voto suggerito
-     * Poi togli lo stub di codice qui sotto
-     */
-    setSuggestedVote(9);
+    // Invoca l'API /api/calculate per ottenere il voto suggerito
+    // in base ai task svolti (state.task_svolti_correttamente)
+    const calculateSuggestedVote = async () => {
+      try {
+        const response = await fetch(`/api/calculate`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            tasks: state.task_svolti_correttamente,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Errore durante la chiamata a /api/calculate");
+        }
+
+        // Supponendo che la risposta abbia la forma { suggestedVote: number }
+        const data = await response.json();
+        setSuggestedVote(data.suggestedVote);
+      } catch (error) {
+        console.error("Errore nel calcolo del voto suggerito:", error);
+        // In caso di errore, puoi usare un valore predefinito
+        setSuggestedVote(0);
+      }
+    };
+
+    calculateSuggestedVote();
   }, [state.task_svolti_correttamente]);
 
   return (
@@ -41,9 +68,10 @@ export const EvaluationForm: React.FC = () => {
         type="text"
         value={state.nome}
         onChange={(e) =>
-          setState((state) => ({ ...state, nome: e.target.value }))
+          setState((current) => ({ ...current, nome: e.target.value }))
         }
       />
+
       <h2>Task svolti correttamente</h2>
       <div>
         <label>
@@ -87,6 +115,7 @@ export const EvaluationForm: React.FC = () => {
           task_2_backend
         </label>
       </div>
+
       <h2>
         Valutazione complessiva:{" "}
         <span className={evaluateBadgeColor(state.valutazione)}>
@@ -97,20 +126,22 @@ export const EvaluationForm: React.FC = () => {
         step={1}
         min={0}
         max={10}
-        marks={true}
+        marks
         valueLabelDisplay="auto"
+        // la "valutazione" effettiva usata dallo studente/docente
         value={state.valutazione}
+        // inseriamo un mark che mostra il voto suggerito
         marks={sliderMarks}
         onChange={(e) => {
-          setState((state) => ({
-            ...state,
+          setState((current) => ({
+            ...current,
             valutazione: Number(e.target.value),
           }));
         }}
       />
       <div className={styles.note}>
         La valutazione può essere modificata a piacere dal docente, il voto
-        calcalato sulla base dei task svolti è solo un suggerimento
+        calcolato sulla base dei task svolti è solo un suggerimento
       </div>
 
       <h2>Note del docente</h2>
@@ -118,17 +149,18 @@ export const EvaluationForm: React.FC = () => {
         <textarea
           value={note}
           onChange={(e) =>
-            setState((state) => ({ ...state, note: e.target.value }))
+            setState((current) => ({ ...current, note: e.target.value }))
           }
         ></textarea>
       </div>
+
       <h2>Link</h2>
       <div className={styles.fullWidth}>
         <input
           type="text"
           value={link}
           onChange={(e) =>
-            setState((state) => ({ ...state, link: e.target.value }))
+            setState((current) => ({ ...current, link: e.target.value }))
           }
         />
       </div>

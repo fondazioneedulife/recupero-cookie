@@ -1,5 +1,6 @@
 import Router from "@koa/router";
 import { Evaluation } from "../../api";
+import { Average } from "../../api/evaluation"; 
 import {
   createEvaluation,
   deleteEvaluation,
@@ -7,6 +8,10 @@ import {
   getEvaluations,
   updateEvaluation,
 } from "../services/evaluation";
+import { averageRating, averageTasks } from "../lib/averages";
+
+// Importa la funzione di calcolo del punteggio
+import { calculate } from "../lib/evaluation";
 
 const router = new Router({
   prefix: "/api",
@@ -41,10 +46,36 @@ router.delete("/evaluation/:id", async (ctx) => {
 
 /**
  * TODO: Task 1 - backend
+ * implementiamo la rotta per /api/average-evaluation
  */
+router.get("/average-evaluation", async (ctx) => {
+  // recuperiamo tutte le valutazioni dal service
+  const evaluations = await getEvaluations();
+
+  // calcoliamo la media dei rating e la media dei task
+  const rating = averageRating(evaluations); // restituisce un number
+  const tasks = averageTasks(evaluations);   // restituisce un number
+
+  // creiamo un oggetto di tipo Average
+  // Average prevede campi in formato string, quindi convertiamo i numeri
+  const average: Average = {
+    rating: rating.toString(),
+    tasks: tasks.toString(),
+  };
+
+  // restituiamo l'oggetto
+  ctx.body = average;
+});
 
 /**
  * TODO: Task 2 - backend
+ * aggiungiamo la rotta /api/calculate
  */
+router.post("/calculate", async (ctx) => {
+  const { tasks } = ctx.request.body;
+  const evaluationResult = calculate(tasks);
+  ctx.body = evaluationResult;
+});
+
 
 export default router;
