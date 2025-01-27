@@ -1,5 +1,5 @@
 import Router from "@koa/router";
-import { Evaluation } from "../../api";
+import { Evaluation, Average } from "../../api";
 import {
   createEvaluation,
   deleteEvaluation,
@@ -7,6 +7,7 @@ import {
   getEvaluations,
   updateEvaluation,
 } from "../services/evaluation";
+import { averageRating, averageTasks } from "../lib/averages";
 
 const router = new Router({
   prefix: "/api",
@@ -42,6 +43,17 @@ router.delete("/evaluation/:id", async (ctx) => {
 /**
  * TODO: Task 1 - backend
  */
+
+router.get("/average-evaluation", async (ctx) => {
+  const evaluations = await getEvaluations();
+  const avgRating = averageRating(evaluations);
+  const avgTasks = averageTasks(evaluations);
+  const average: Average = {
+    rating: avgRating,
+    tasks: avgTasks,
+  };
+  ctx.body = average;
+});
 
 /**
  * TODO: Task 2 - backend
