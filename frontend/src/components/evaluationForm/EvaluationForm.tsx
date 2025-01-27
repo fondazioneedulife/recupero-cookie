@@ -5,6 +5,7 @@ import { Evaluation } from "../../../../api";
 import { evaluateBadgeColor } from "../../lib/evaluateColor";
 import { EvaluationFormContext, TEvaluationContext } from "./EvaluationContext";
 import styles from "./EvaluationForm.module.css";
+import { config } from "../../config";
 
 export const EvaluationForm: React.FC = () => {
   const { state, setState, setTask, note, link, onSave } = useContext(
@@ -19,13 +20,24 @@ export const EvaluationForm: React.FC = () => {
   ];
 
   useEffect(() => {
-    // Calcola il voto suggerito
     /**
      * TODO: Task 2 - frontend
-     * Qui devi implementare l'invocazione dell'api /api/calculate per ottenere il voto suggerito
-     * Poi togli lo stub di codice qui sotto
      */
-    setSuggestedVote(9);
+    fetch(`${config.API_BASEPATH}/api/calculate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tasks: state.task_svolti_correttamente }),
+    })
+      .then((response) => {
+        if (!response.ok) throw new Error("Failed to fetch suggested vote");
+        return response.json();
+      })
+      .then((data) => {
+        setSuggestedVote(data.evaluation);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   }, [state.task_svolti_correttamente]);
 
   return (
