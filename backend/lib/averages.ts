@@ -24,7 +24,12 @@ export const averageTasks = (evaluations: Evaluation[]) => {
  */
 export const averageRating = (evaluations: Evaluation[]) => {
   const total = evaluations.length;
-  const sum = 100; // TODO: Task 3 - backend - Somma i voti di tutte le valutazioni
+  /**
+   * TODO: Task 3 - backend
+   */
+  const sum = evaluations
+    .map((evaluation) => evaluation.valutazione)
+    .reduce((total, valutazione) => total + valutazione, 0);
   const average = sum / total;
   return `${Math.round(average * 10) / 10}`;
 };
