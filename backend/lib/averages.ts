@@ -1,3 +1,4 @@
+import { forEach } from "mongoose/lib/helpers/specialProperties";
 import { Evaluation } from "../../api";
 
 /**
@@ -24,7 +25,13 @@ export const averageTasks = (evaluations: Evaluation[]) => {
  */
 export const averageRating = (evaluations: Evaluation[]) => {
   const total = evaluations.length;
-  const sum = 100; // TODO: Task 3 - backend - Somma i voti di tutte le valutazioni
+  let sum = 0;
+
+  for (let index = 0; index < total; index++) {
+    sum = sum + evaluations[index].valutazione;
+    
+  }
+  
   const average = sum / total;
   return `${Math.round(average * 10) / 10}`;
 };
