@@ -8,6 +8,7 @@ import {
   updateEvaluation,
   calculateAverageEvaluation,
 } from "../services/evaluation";
+import { calculate } from "../lib/evaluation"; // Importa la funzione di calcolo
 
 const router = new Router({
   prefix: "/api",
@@ -44,7 +45,6 @@ export type Average = {
   tasks: string;
   rating: string;
 };
-
 export type Evaluation = {
   id: string;
   tasks: number;
@@ -62,6 +62,24 @@ router.get("/average-evaluation", async (ctx) => {
   }
 });
 
-// inserisci qua il secondo Task
+router.post("/calculate", async (ctx) => {
+  try {
+    const { task_svolti_correttamente } = ctx.request.body;
+
+    if (!task_svolti_correttamente) {
+      ctx.status = 400;
+      ctx.body = { message: "Task svolti correttamente non forniti" };
+      return;
+    }
+
+    const valutazione = calculate(task_svolti_correttamente);
+
+    ctx.body = { voto_suggerito: Math.round(valutazione) };
+  } catch (error) {
+    console.error("Errore durante il calcolo della valutazione:", error);
+    ctx.status = 500;
+    ctx.body = { message: "Errore interno durante il calcolo della valutazione" };
+  }
+});
 
 export default router;

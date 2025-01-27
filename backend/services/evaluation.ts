@@ -44,3 +44,22 @@ export const updateEvaluation = async (id: string, evaluation: Evaluation) => {
 export const deleteEvaluation = async (id: string) => {
   return EvaluationModel.findByIdAndDelete(id);
 };
+
+export const calculateAverageEvaluation = async () => {
+  try {
+    const evaluations = await EvaluationModel.find();
+
+    const totalEvaluations = evaluations.length;
+    const sum = evaluations.reduce(
+      (acc, evaluation) => acc + (evaluation.valutazione || 0),
+      0
+    );
+    const average = totalEvaluations > 0 ? sum / totalEvaluations : 0;
+
+    return { tasks: "0", rating: `${Math.round(average * 10) / 10}` }; // Ritorna un oggetto
+  } catch (error) {
+    console.error("Error calculating average evaluation:", error);
+    throw new Error("Failed to calculate average evaluation");
+  }
+};
+
