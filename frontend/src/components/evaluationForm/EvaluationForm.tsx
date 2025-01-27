@@ -13,19 +13,36 @@ export const EvaluationForm: React.FC = () => {
 
   const [suggestedVote, setSuggestedVote] = useState(0);
 
-  // Voto suggerito, riportato sullo slider
   const sliderMarks: Mark[] = [
     { value: suggestedVote, label: `Voto suggerito: ${suggestedVote}` },
   ];
 
   useEffect(() => {
-    // Calcola il voto suggerito
-    /**
-     * TODO: Task 2 - frontend
-     * Qui devi implementare l'invocazione dell'api /api/calculate per ottenere il voto suggerito
-     * Poi togli lo stub di codice qui sotto
-     */
-    setSuggestedVote(9);
+    const calculateSuggestedVote = async () => {
+      try {
+        const response = await fetch("/api/calculate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            task_svolti_correttamente: state.task_svolti_correttamente,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Errore nella chiamata all'API");
+        }
+
+        const data = await response.json();
+
+        setSuggestedVote(data.voto_suggerito || 0);
+      } catch (error) {
+        console.error("Errore durante il calcolo del voto suggerito:", error);
+      }
+    };
+
+    calculateSuggestedVote();
   }, [state.task_svolti_correttamente]);
 
   return (
@@ -104,13 +121,13 @@ export const EvaluationForm: React.FC = () => {
         onChange={(e) => {
           setState((state) => ({
             ...state,
-            valutazione: Number(e.target.value),
+            valutazione: Number((e.target as HTMLInputElement).value),
           }));
         }}
       />
       <div className={styles.note}>
         La valutazione può essere modificata a piacere dal docente, il voto
-        calcalato sulla base dei task svolti è solo un suggerimento
+        calcolato sulla base dei task svolti è solo un suggerimento
       </div>
 
       <h2>Note del docente</h2>

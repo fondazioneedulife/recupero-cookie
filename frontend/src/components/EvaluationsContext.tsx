@@ -5,8 +5,18 @@ import {
   useMemo,
   useState,
 } from "react";
-import { Average, Evaluation } from "../../../api";
 import { config } from "../config";
+
+export type Average = {
+  tasks: string;
+  rating: string;
+};
+
+export type Evaluation = {
+  id: string;
+  tasks: number;
+  rating: number;
+};
 
 type TEvaluationContext = {
   reload: () => void;
@@ -24,15 +34,18 @@ const loadEvaluations = () =>
   fetch(`${config.API_BASEPATH}/api/evaluations`).then((res) => res.json());
 
 const getAverage = () => {
-  /**
-   * TODO: Task 1 - frontend
-   * Qui devi implementare l'invocazione dell'api /api/average-evaluation per ottenere la media
-   * Poi togli lo stub di codice qui sotto
-   */
-  return Promise.resolve({
-    tasks: "Attenzione, qui manca il dato!",
-    rating: "Attenzione, qui manca il dato!",
-  } as Average);
+  return fetch(`${config.API_BASEPATH}/api/average-evaluation`)
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error("Failed to fetch average evaluation");
+      }
+      return res.json();
+    })
+    .then((data: Average) => data)
+    .catch((error) => {
+      console.error("Error fetching average evaluation:", error);
+      return { tasks: "0", rating: "0" } as Average;
+    });
 };
 
 export const EvaluationsProvider: React.FC<PropsWithChildren> = ({
@@ -57,10 +70,10 @@ export const EvaluationsProvider: React.FC<PropsWithChildren> = ({
     () => ({ reload, evaluations, average }),
     [reload, evaluations, average],
   );
-
   return (
     <EvaluationsContext.Provider value={value}>
       {children}
     </EvaluationsContext.Provider>
   );
 };
+

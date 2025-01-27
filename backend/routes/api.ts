@@ -6,6 +6,7 @@ import {
   getEvaluation,
   getEvaluations,
   updateEvaluation,
+  calculateAverageEvaluation,
 } from "../services/evaluation";
 
 const router = new Router({
@@ -39,12 +40,28 @@ router.delete("/evaluation/:id", async (ctx) => {
   ctx.body = { message: "Evaluation deleted" };
 });
 
-/**
- * TODO: Task 1 - backend
- */
+export type Average = {
+  tasks: string;
+  rating: string;
+};
 
-/**
- * TODO: Task 2 - backend
- */
+export type Evaluation = {
+  id: string;
+  tasks: number;
+  rating: number;
+};
+
+router.get("/average-evaluation", async (ctx) => {
+  try {
+    const average = await calculateAverageEvaluation();
+    ctx.body = average;
+  } catch (error) {
+    console.error("Error fetching average evaluation:", error);
+    ctx.status = 500;
+    ctx.body = { message: "Failed to fetch average evaluation" };
+  }
+});
+
+// inserisci qua il secondo Task
 
 export default router;
