@@ -6,7 +6,6 @@ import { evaluateBadgeColor } from "../../lib/evaluateColor";
 import { EvaluationFormContext, TEvaluationContext } from "./EvaluationContext";
 import styles from "./EvaluationForm.module.css";
 
-
 export type TaskEvaluations = Record<keyof Tasks, number>;
 
 export const EvaluationForm: React.FC = () => {
@@ -28,7 +27,7 @@ export const EvaluationForm: React.FC = () => {
     // in base ai task svolti (state.task_svolti_correttamente)
     const calculateSuggestedVote = async () => {
       try {
-        const response = await fetch(`/api/calculate`, {
+        const response = await fetch(`http://localhost:27017/api/calculate`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -42,9 +41,9 @@ export const EvaluationForm: React.FC = () => {
           throw new Error("Errore durante la chiamata a /api/calculate");
         }
 
-        // Supponendo che la risposta abbia la forma { suggestedVote: number }
+        // Supponiamo che la risposta sia un oggetto con "suggestedVote"
         const data = await response.json();
-        setSuggestedVote(data.suggestedVote);
+        setSuggestedVote(data.suggestedVote); // Imposta il voto suggerito
       } catch (error) {
         console.error("Errore nel calcolo del voto suggerito:", error);
         // In caso di errore, puoi usare un valore predefinito

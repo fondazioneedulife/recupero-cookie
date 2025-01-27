@@ -68,14 +68,19 @@ router.get("/average-evaluation", async (ctx) => {
 });
 
 /**
- * TODO: Task 2 - backend
- * aggiungiamo la rotta /api/calculate
+ * Task 2 - backend
+ * Aggiungiamo la rotta /api/calculate
+ * Calcoliamo la valutazione basata sui task svolti.
  */
 router.post("/calculate", async (ctx) => {
+  // Recuperiamo i task svolti dal body della richiesta
   const { tasks } = ctx.request.body;
-  const evaluationResult = calculate(tasks);
-  ctx.body = evaluationResult;
-});
 
+  // Calcoliamo la valutazione utilizzando la funzione calculate
+  const evaluationResult = calculate(tasks);
+
+  // Restituiamo il risultato della valutazione come numero
+  ctx.body = { suggestedVote: evaluationResult };
+});
 
 export default router;
