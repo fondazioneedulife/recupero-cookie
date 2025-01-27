@@ -25,11 +25,11 @@ export const averageTasks = (evaluations: Evaluation[]) => {
  */
 export const averageRating = (evaluations: Evaluation[]) => {
   const total = evaluations.length;
+  
+  //Ciclo per calcolare la media delle valutazioni
   let sum = 0;
-
   for (let index = 0; index < total; index++) {
     sum = sum + evaluations[index].valutazione;
-    
   }
   
   const average = sum / total;
