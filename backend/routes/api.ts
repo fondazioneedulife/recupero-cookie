@@ -8,6 +8,7 @@ import {
   updateEvaluation,
 } from "../services/evaluation";
 import { averageRating, averageTasks } from "../lib/averages";
+import { calculate } from "../lib/evaluation";
 
 const router = new Router({
   prefix: "/api",
@@ -58,5 +59,11 @@ router.get("/average-evaluation", async (ctx) => {
 /**
  * TODO: Task 2 - backend
  */
+router.post("/calculate", async (ctx) => {
+  ctx.accepts("application/json");
+  const tasks = ctx.request.body.tasks;
+  const evaluation = Math.round(calculate(tasks));
+  ctx.body = { evaluation };
+});
 
 export default router;
