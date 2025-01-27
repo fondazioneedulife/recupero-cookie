@@ -25,7 +25,22 @@ export const EvaluationForm: React.FC = () => {
      * Qui devi implementare l'invocazione dell'api /api/calculate per ottenere il voto suggerito
      * Poi togli lo stub di codice qui sotto
      */
-    setSuggestedVote(9);
+
+    if (state.task_svolti_correttamente.fork_commit_pr) {
+      setSuggestedVote(suggestedVote + 1);
+    }
+    if (state.task_svolti_correttamente.task_1_frontend) {
+      setSuggestedVote(suggestedVote + 2);
+    }
+    if (state.task_svolti_correttamente.task_1_backend) {
+      setSuggestedVote(suggestedVote + 2);
+    }
+    if (state.task_svolti_correttamente.task_2_frontend) {
+      setSuggestedVote(suggestedVote + 2);
+    }
+    if (state.task_svolti_correttamente.task_2_backend) {
+      setSuggestedVote(suggestedVote + 2);
+    }
   }, [state.task_svolti_correttamente]);
 
   return (
