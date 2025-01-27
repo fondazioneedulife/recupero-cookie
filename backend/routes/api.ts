@@ -1,12 +1,14 @@
 import Router from "@koa/router";
-import { Evaluation } from "../../api";
+import { Average, Evaluation } from "../../api";
 import {
+  averageTasks,
   createEvaluation,
   deleteEvaluation,
   getEvaluation,
   getEvaluations,
   updateEvaluation,
 } from "../services/evaluation";
+import { averageRating } from "../lib/averages";
 
 const router = new Router({
   prefix: "/api",
@@ -39,9 +41,31 @@ router.delete("/evaluation/:id", async (ctx) => {
   ctx.body = { message: "Evaluation deleted" };
 });
 
-/**
- * TODO: Task 1 - backend
- */
+router.get("/average-evaluation", async (ctx) => {
+  try {
+    // Ottieni tutte le valutazioni
+    const evaluations = await getEvaluations();
+
+    // Calcola la media delle valutazioni
+    const averageRatingValue = averageRating(evaluations);
+
+    // Calcola la media dei task svolti
+    const averageTasksValue = averageTasks(evaluations);
+
+    // Crea l'oggetto Average
+    const result: Average = {
+      averageRating: averageRatingValue,
+      averageTasks: averageTasksValue,
+    };
+
+    // Restituisci il risultato
+    ctx.body = result;
+    console.log(result)
+  } catch (error) {
+    ctx.status = 500;
+    ctx.body = { error: "Errore durante il calcolo delle medie." };
+  }
+});
 
 /**
  * TODO: Task 2 - backend

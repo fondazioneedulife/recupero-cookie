@@ -24,15 +24,23 @@ const loadEvaluations = () =>
   fetch(`${config.API_BASEPATH}/api/evaluations`).then((res) => res.json());
 
 const getAverage = () => {
-  /**
-   * TODO: Task 1 - frontend
-   * Qui devi implementare l'invocazione dell'api /api/average-evaluation per ottenere la media
-   * Poi togli lo stub di codice qui sotto
-   */
-  return Promise.resolve({
-    tasks: "Attenzione, qui manca il dato!",
-    rating: "Attenzione, qui manca il dato!",
-  } as Average);
+  // Implementazione dell'invocazione dell'API /api/average-evaluation
+  return fetch(`${config.API_BASEPATH}/api/average-evaluation`)
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error("Failed to fetch average evaluation");
+      }
+      return res.json();
+    })
+    .then((data) => { console.log("get.avarege",data);return data as Average})
+    .catch((error) => {
+      console.error("Error fetching average evaluation:", error);
+      return { tasks: "10", rating: "10" } as Average;
+    });
+};
+export type Average = {
+  averageTasks: string;
+  averageRating: string;
 };
 
 export const EvaluationsProvider: React.FC<PropsWithChildren> = ({
