@@ -1,5 +1,5 @@
 import Router from "@koa/router";
-import { Evaluation } from "../../api";
+import { Evaluation, Tasks } from "../../api";
 import {
   createEvaluation,
   deleteEvaluation,
@@ -7,6 +7,7 @@ import {
   getEvaluations,
   updateEvaluation,
 } from "../services/evaluation";
+import { calculate } from "../lib/evaluation";
 
 const router = new Router({
   prefix: "/api",
@@ -39,12 +40,18 @@ router.delete("/evaluation/:id", async (ctx) => {
   ctx.body = { message: "Evaluation deleted" };
 });
 
-/**
- * TODO: Task 1 - backend
- */
+router.get("/average-evaluation", async (ctx) => {
+  const evaluations = await getEvaluations();
+  const tasks = evaluations.length;
+  const rating = evaluations.reduce((acc, e) => acc + e.valutazione, 0) / tasks;
+  ctx.body = { tasks: tasks.toString(), rating: rating.toString() };
+});
 
-/**
- * TODO: Task 2 - backend
- */
+router.post("/calculate", async (ctx) => {
+  const { tasksCompleted } = ctx.request.body as { tasksCompleted: Tasks };
+  const suggestedVote =  calculate( tasksCompleted );
+  ctx.body = { suggestedVote };
+});
+
 
 export default router;

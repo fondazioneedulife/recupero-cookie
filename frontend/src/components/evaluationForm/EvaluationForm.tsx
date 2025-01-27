@@ -1,10 +1,11 @@
 import { Slider, Typography } from "@mui/material";
 import { Mark } from "@mui/material/Slider/useSlider.types";
 import React, { useContext, useEffect, useState } from "react";
-import { Evaluation } from "../../../../api";
+import { Evaluation, Tasks } from "../../../../api";
 import { evaluateBadgeColor } from "../../lib/evaluateColor";
 import { EvaluationFormContext, TEvaluationContext } from "./EvaluationContext";
 import styles from "./EvaluationForm.module.css";
+import { config } from "../../config";
 
 export const EvaluationForm: React.FC = () => {
   const { state, setState, setTask, note, link, onSave } = useContext(
@@ -13,6 +14,18 @@ export const EvaluationForm: React.FC = () => {
 
   const [suggestedVote, setSuggestedVote] = useState(0);
 
+  const fetchSuggestedVote = async (tasksCompleted: Tasks) => {
+    const response = await fetch(`${config.API_BASEPATH}/api/calculate`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ tasksCompleted }),
+    });
+    const data = await response.json();
+    return data.suggestedVote;
+  };
+
   // Voto suggerito, riportato sullo slider
   const sliderMarks: Mark[] = [
     { value: suggestedVote, label: `Voto suggerito: ${suggestedVote}` },
@@ -20,12 +33,9 @@ export const EvaluationForm: React.FC = () => {
 
   useEffect(() => {
     // Calcola il voto suggerito
-    /**
-     * TODO: Task 2 - frontend
-     * Qui devi implementare l'invocazione dell'api /api/calculate per ottenere il voto suggerito
-     * Poi togli lo stub di codice qui sotto
-     */
-    setSuggestedVote(9);
+    fetchSuggestedVote(state.task_svolti_correttamente).then((vote) => {
+      setSuggestedVote(vote);
+    });
   }, [state.task_svolti_correttamente]);
 
   return (
