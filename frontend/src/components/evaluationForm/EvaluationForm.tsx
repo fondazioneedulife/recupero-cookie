@@ -5,6 +5,8 @@ import { Evaluation } from "../../../../api";
 import { evaluateBadgeColor } from "../../lib/evaluateColor";
 import { EvaluationFormContext, TEvaluationContext } from "./EvaluationContext";
 import styles from "./EvaluationForm.module.css";
+import { config } from "../../config";
+
 
 export const EvaluationForm: React.FC = () => {
   const { state, setState, setTask, note, link, onSave } = useContext(
@@ -19,13 +21,27 @@ export const EvaluationForm: React.FC = () => {
   ];
 
   useEffect(() => {
-    // Calcola il voto suggerito
-    /**
-     * TODO: Task 2 - frontend
-     * Qui devi implementare l'invocazione dell'api /api/calculate per ottenere il voto suggerito
-     * Poi togli lo stub di codice qui sotto
-     */
-    setSuggestedVote(9);
+    const setSuggested = async() => {
+      try {
+        const response = await fetch(`${config.API_BASEPATH}/api/calculate`, {
+          method: "POST",
+          body: JSON.stringify(state.task_svolti_correttamente),
+          headers: { "Content-Type": "application/json" },
+        });
+      
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const data = await response.json();
+        setSuggestedVote(data);
+
+      } catch (error) {
+        console.error("Errore nel fetching della media:", error);
+      }
+    };
+    setSuggested()
+
   }, [state.task_svolti_correttamente]);
 
   return (

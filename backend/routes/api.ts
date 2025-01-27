@@ -1,6 +1,7 @@
 import Router from "@koa/router";
-import { Average, Evaluation } from "../../api";
+import {Tasks, Average, Evaluation } from "../../api";
 import {averageRating, averageTasks } from "../lib/averages"
+import {calculate } from "../lib/evaluation"
 import {
   createEvaluation,
   deleteEvaluation,
@@ -51,8 +52,12 @@ router.get("/average-evaluation", async (ctx) => {
   } as Average
 });
 
-/**
- * TODO: Task 2 - backend
- */
+router.post("/calculate", async (ctx) => {
+  ctx.accepts("json");
+
+  const response = await calculate(ctx.request.body as Tasks);
+
+  ctx.body = response;
+});
 
 export default router;
